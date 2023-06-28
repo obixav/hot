@@ -7,11 +7,12 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Listing;
 use App\Models\Message;
-use Database\Factories\ListingFactory;
 use App\Enums\ListingPlatform;
+use App\Services\MessageSendingService;
 
 class SendMessageControllerTest extends TestCase
 {
+
     use RefreshDatabase;
     public function test_a_valid_listing_must_be_provided()
     {
@@ -48,6 +49,7 @@ class SendMessageControllerTest extends TestCase
 
     public function test_a_message_can_be_sent_successfully()
     {
+
         // Give we have a listing
         $listing = Listing::factory()->create([
             'platform' => ListingPlatform::AIRBNB
@@ -55,6 +57,7 @@ class SendMessageControllerTest extends TestCase
 
         // And we are spying on the service
         $service = $this->spy(MessageSendingService::class);
+
 
         // When we call the endpoint for the listing with a message
         $response = $this->postJson("/api/listings/{$listing->uuid->toString()}", [
@@ -72,5 +75,6 @@ class SendMessageControllerTest extends TestCase
         $service->shouldHaveReceived('send')
             ->with(\Mockery::on(fn (Message $message) => $message->is($createdMessage)))
             ->once();
+
     }
 }

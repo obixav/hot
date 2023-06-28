@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('listings', function (Blueprint $table) {
-            $table->uuid('uuid');
-            $table->primary('uuid');
+            $table->uuid('uuid')->primary();
             $table->string('platform');
             $table->timestamps();
         });
